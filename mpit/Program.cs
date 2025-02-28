@@ -24,6 +24,9 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
 // Add DI (Services, Mapping, DbContext)
+services.AddScoped<UsersRepository>();
+
+services.AddScoped<PasswordHasher>();
 
 services.AddDbContext<ApplicationDbContext>(options => 
     options.UseNpgsql(config.GetConnectionString(nameof(ApplicationDbContext))));

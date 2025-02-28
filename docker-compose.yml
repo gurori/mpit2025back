@@ -9,13 +9,13 @@ services:
       #- ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      #- ASPNETCORE_HTTPS_PORTS=8081
     build:
       context: .
-      dockerfile: ./mpit/Dockerfile
-    volumes:
-      - ./ssl:/app/ssl
-      - ./:/app # delete on prod
+      dockerfile: ./Dockerfile
+    #volumes:
+    #- ./ssl:/app/ssl
+    #- ./:/app # delete on prod
     networks:
       - mpit
     depends_on:
