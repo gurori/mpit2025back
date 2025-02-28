@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("mpit")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+87c23822ef66a83df510ae3eb7d88fa738b8f84f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f72c2a0a1519e7e51db76dbdb90858831c3877db")]
 [assembly: System.Reflection.AssemblyProductAttribute("mpit")]
 [assembly: System.Reflection.AssemblyTitleAttribute("mpit")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
