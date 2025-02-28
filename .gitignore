@@ -1,0 +1,65 @@
+# Стандартные файлы и каталоги
+/bin/
+/obj/
+
+# Папка для скомпилированных файлов
+/out/
+/publish/
+
+# Логи
+*.log
+
+# Пользовательские файлы конфигурации
+/appsettings.Development.json
+/appsettings.Production.json
+/appsettings.Staging.json
+
+# Файлы среды
+*.env
+
+# Папка с кэшом
+**/.vs/
+.vscode/
+.idea/
+
+# Кэш пакетов NuGet
+*.nupkg
+*.snupkg
+
+# Папки для кэша NuGet
+*.nuget/
+**/packages/
+
+# Файлы с учётными данными или сертификатами
+*.pfx
+*.p12
+
+# Папка с исходниками отразителей
+Reflector*
+
+# Другие форматы, которые можно игнорировать
+*.db
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Установка пакетов .NET
+/project.lock.json
+/project.fragment.lock.json
+
+# Папки для Docker
+/.docker/
+/.dockerignore
+
+# Папка для блокировок
+**/properties/
+
+# Папка для тестов
+**/test/
+
+# Специфичные файлы для macOS
+/.DS_Store
+
+# Специфичные файлы для Windows
+/Thumbs.db
