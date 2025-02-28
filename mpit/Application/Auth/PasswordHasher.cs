@@ -1,3 +1,5 @@
+namespace mpit.Application.Auth;
+
 public sealed class PasswordHasher {
 
     public string Generate(string password) =>

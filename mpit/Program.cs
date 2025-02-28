@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
+using mpit.Application.Auth;
+using mpit.DataAccess.Repositories;
+using mpit.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +30,8 @@ services.AddSwaggerGen();
 services.AddScoped<UsersRepository>();
 
 services.AddScoped<PasswordHasher>();
+
+services.AddAutoMapper(typeof(ApplicationAutoMapper));
 
 services.AddDbContext<ApplicationDbContext>(options => 
     options.UseNpgsql(config.GetConnectionString(nameof(ApplicationDbContext))));

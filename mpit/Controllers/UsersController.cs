@@ -1,4 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using mpit.Application.Auth;
+using mpit.Core.DTOs;
+using mpit.DataAccess.Repositories;
+
+namespace mpit.controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -14,9 +19,16 @@ public sealed class UsersController(
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterUserRequest request) {
 
-        string passwordHash = _passwordHasher.Generate(request.Password);
+        string passwordHash = _passwordHasher
+            .Generate(request.Password);
 
-        await _repository.CreateAsync(request.Login, passwordHash);
+        bool isUserAlreadyExist = await _repository
+            .TryCreateAsync(request.Login, passwordHash);
+
+        if (isUserAlreadyExist) {
+            return Problem(statusCode: 409, 
+                detail: "Данный пользователь уже зарегестрирован");
+        }
 
         return Ok();
     }
