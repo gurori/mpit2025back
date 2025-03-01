@@ -4,22 +4,24 @@ using mpit.DataAccess.Entities;
 
 namespace mpit.DataAccess.Configurations;
 
-public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
+public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 {
     public void Configure(EntityTypeBuilder<UserEntity> builder)
     {
-        builder.HasKey(u => u.Id);
+        builder.ToTable("Users");
 
-        // Настройка свойств
-        builder
-            .Property(u => u.FirstName)
-            .IsRequired() // Обязательное поле
-            .HasMaxLength(100); // Максимальная длина
+        builder.HasKey(u => u.Id); // Указание первичного ключа, если Id – это свойство базового класса BaseEntity
 
-        builder.Property(u => u.PasswordHash).IsRequired().HasMaxLength(256);
+        builder.Property(u => u.FirstName).HasColumnName("First_Name").IsRequired();
 
-        builder.Property(u => u.Role).IsRequired().HasMaxLength(50);
+        builder.Property(u => u.PasswordHash).HasColumnName("Password_Hash").IsRequired();
 
-        builder.Property(u => u.Login).IsRequired().HasMaxLength(256);
+        builder.Property(u => u.Role).HasColumnName("Role").IsRequired();
+
+        builder.Property(u => u.Email).HasColumnName("Email").IsRequired();
+
+        builder.Property(u => u.Coins);
+
+        builder.HasMany(u => u.Posts).WithOne(p => p.Author).HasForeignKey(p => p.AuthorId);
     }
 }

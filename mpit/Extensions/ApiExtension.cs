@@ -1,15 +1,15 @@
-using mpit.Application.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using mpit.Application.Auth;
 
-namespace mpit.Extensions {
-
-public static class ApiExtensions
+namespace mpit.Extensions
+{
+    public static class ApiExtensions
     {
         public static void AddAuthentication(
             this IServiceCollection services,
             IConfiguration configuration
-            )
+        )
         {
             var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
             var scheme = JwtBearerDefaults.AuthenticationScheme;
@@ -21,27 +21,33 @@ public static class ApiExtensions
                     options.DefaultSignInScheme = scheme;
                     options.DefaultChallengeScheme = scheme;
                 })
-                .AddJwtBearer(scheme, options =>
-                {
-                    options.RequireHttpsMetadata = true;
-                    options.SaveToken = true;
-
-                    options.TokenValidationParameters = JwtParameters
-                        .GetTokenValidationParameters(jwtOptions!);
-
-                    options.Events = new JwtBearerEvents
+                .AddJwtBearer(
+                    scheme,
+                    options =>
                     {
-                        OnMessageReceived = context =>
-                        {
-                            context.Token = context.Request.Cookies["auth"];
+                        options.RequireHttpsMetadata = true;
+                        options.SaveToken = true;
 
-                            return Task.CompletedTask;
-                        }
-                    };
-                });
+                        options.TokenValidationParameters =
+                            JwtParameters.GetTokenValidationParameters(jwtOptions!);
+
+                        options.Events = new JwtBearerEvents
+                        {
+                            OnMessageReceived = context =>
+                            {
+                                context.Token = context.Request.Cookies["auth"];
+
+                                return Task.CompletedTask;
+                            },
+                        };
+                    }
+                );
 
             services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
+            services.AddSingleton<
+                IAuthorizationPolicyProvider,
+                PermissionAuthorizationPolicyProvider
+            >();
             services.AddAuthorization();
         }
     }

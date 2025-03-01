@@ -18,7 +18,7 @@ public sealed class UsersRepository(ApplicationDbContext context, IMapper mapper
     )
     {
         System.Console.WriteLine("start");
-        if (await _context.Users.AsNoTracking().AnyAsync(u => u.Login == email))
+        if (await _context.Users.AsNoTracking().AnyAsync(u => u.Email == email))
         {
             System.Console.WriteLine("already");
             return true;
@@ -29,7 +29,7 @@ public sealed class UsersRepository(ApplicationDbContext context, IMapper mapper
             PasswordHash = passwordHash,
             FirstName = firstName,
             Role = role,
-            Login = email,
+            Email = email,
         };
         System.Console.WriteLine("add");
         await _context.Users.AddAsync(user);
@@ -42,7 +42,7 @@ public sealed class UsersRepository(ApplicationDbContext context, IMapper mapper
     {
         UserEntity? userEntity = await _context
             .Users.AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Login == login);
+            .FirstOrDefaultAsync(x => x.Email == login);
         if (userEntity is null)
             return null;
         return _mapper.Map<User>(userEntity);

@@ -10,6 +10,7 @@ public sealed class ApplicationDbContext(
 {
     public DbSet<UserEntity> Users { get; set; }
     public DbSet<RoleEntity> Roles { get; set; }
+    public DbSet<Post> Posts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
