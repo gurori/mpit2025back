@@ -1,6 +1,6 @@
 namespace mpit.DataAccess.Entities;
 
-public abstract class BaseEntity {
-
-    public Guid Id {get; set;}
+public abstract class BaseEntity
+{
+    public Guid Id { get; set; }
 }

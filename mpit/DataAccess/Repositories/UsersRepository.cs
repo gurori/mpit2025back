@@ -11,54 +11,38 @@ public sealed class UsersRepository(ApplicationDbContext context, IMapper mapper
     private readonly IMapper _mapper = mapper;
 
     public async Task<bool> TryCreateAsync(
-        string login,
+        string email,
         string passwordHash,
         string firstName,
         string role
     )
     {
-        var user = new UserEntity();
-
-        if (login.Contains('@'))
+        System.Console.WriteLine("start");
+        if (await _context.Users.AsNoTracking().AnyAsync(u => u.Login == email))
         {
-            if (await _context.Users.AnyAsync(x => x.Email == login))
-            {
-                return true;
-            }
-            user.Email = login;
+            System.Console.WriteLine("already");
+            return true;
         }
-        else
+        var user = new UserEntity
         {
-            if (await _context.Users.AnyAsync(x => x.PhoneNumber == login))
-            {
-                return true;
-            }
-            user.PhoneNumber = login;
-        }
-        user.PasswordHash = passwordHash;
-        user.FirstName = firstName;
-        user.Role = role;
-
+            Id = Guid.NewGuid(),
+            PasswordHash = passwordHash,
+            FirstName = firstName,
+            Role = role,
+            Login = email,
+        };
+        System.Console.WriteLine("add");
         await _context.Users.AddAsync(user);
+        System.Console.WriteLine("added");
         await _context.SaveChangesAsync();
         return false;
     }
 
     public async Task<User?> GetByLoginAsync(string login)
     {
-        UserEntity? userEntity;
-        if (login.Contains('@'))
-        {
-            userEntity = await _context
-                .Users.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Email == login);
-        }
-        else
-        {
-            userEntity = await _context
-                .Users.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.PhoneNumber == login);
-        }
+        UserEntity? userEntity = await _context
+            .Users.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Login == login);
         if (userEntity is null)
             return null;
         return _mapper.Map<User>(userEntity);

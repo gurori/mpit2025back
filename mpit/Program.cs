@@ -2,14 +2,13 @@ using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 using mpit.Application.Auth;
 using mpit.DataAccess.Repositories;
-using mpit.Mapping;
 using mpit.Extensions;
+using mpit.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
 var config = builder.Configuration;
-
 
 services.Configure<JwtOptions>(config.GetSection(nameof(JwtOptions)));
 services.Configure<AuthorizationOptions>(config.GetSection(nameof(AuthorizationOptions)));
@@ -32,6 +31,7 @@ services.AddMvc();
 // Add DI (Services, Mapping, DbContext)
 services.AddScoped<UsersRepository>();
 services.AddScoped<PermissionsRepository>();
+services.AddScoped<PostsRepository>();
 
 services.AddScoped<JwtProvider>();
 services.AddScoped<PasswordHasher>();
@@ -75,7 +75,6 @@ app.UseCookiePolicy(
 app.MapControllers();
 
 app.UseCors();
-
 
 app.UseAuthentication();
 app.UseAuthorization();
