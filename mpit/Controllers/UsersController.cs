@@ -27,7 +27,12 @@ public sealed class UsersController(
     {
         string passwordHash = _passwordHasher.Generate(request.Password);
 
-        bool isUserAlreadyExist = await _repository.TryCreateAsync(request.Login, passwordHash);
+        bool isUserAlreadyExist = await _repository.TryCreateAsync(
+            request.Login,
+            passwordHash,
+            request.FirstName,
+            request.Role
+        );
 
         if (isUserAlreadyExist)
         {
@@ -73,5 +78,27 @@ public sealed class UsersController(
         if (user is null)
             return Unauthorized("User does not found");
         return Ok(user);
+    }
+
+    [Authorize]
+    [HttpGet("role")]
+    public async Task<IActionResult> GetRole()
+    {
+        var token = GetTokenFromHeaders();
+
+        var tokenValidationResult = await _jwtProvider.ValidateTokenAsync(token);
+
+        if (!tokenValidationResult.IsValid)
+            return Unauthorized("Token is not valid");
+
+        string? id = tokenValidationResult.Claims["id"].ToString();
+
+        if (id is null)
+            return BadRequest("Id does not found in token");
+
+        var role = await _repository.GetRoleByIdAsync(Guid.Parse(id));
+        if (role is null)
+            return NotFound();
+        return Ok(role);
     }
 }

@@ -10,7 +10,12 @@ public sealed class UsersRepository(ApplicationDbContext context, IMapper mapper
     private readonly ApplicationDbContext _context = context;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<bool> TryCreateAsync(string login, string passwordHash)
+    public async Task<bool> TryCreateAsync(
+        string login,
+        string passwordHash,
+        string firstName,
+        string role
+    )
     {
         var user = new UserEntity();
 
@@ -31,6 +36,8 @@ public sealed class UsersRepository(ApplicationDbContext context, IMapper mapper
             user.PhoneNumber = login;
         }
         user.PasswordHash = passwordHash;
+        user.FirstName = firstName;
+        user.Role = role;
 
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
@@ -65,5 +72,15 @@ public sealed class UsersRepository(ApplicationDbContext context, IMapper mapper
             return null;
 
         return _mapper.Map<User>(userEntity);
+    }
+
+    public async Task<string?> GetRoleByIdAsync(Guid id)
+    {
+        var role = await _context
+            .Users.AsNoTracking()
+            .Where(x => x.Id == id)
+            .Select(x => x.Role)
+            .FirstOrDefaultAsync();
+        return role;
     }
 }
