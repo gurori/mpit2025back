@@ -3,37 +3,44 @@ using Microsoft.EntityFrameworkCore;
 using mpit.Application.Auth;
 using mpit.DataAccess.Repositories;
 using mpit.Mapping;
+using mpit.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
 var config = builder.Configuration;
 
-// Add services to the container.
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+services.Configure<JwtOptions>(config.GetSection(nameof(JwtOptions)));
+services.Configure<AuthorizationOptions>(config.GetSection(nameof(AuthorizationOptions)));
 
-services.AddCors(o =>
+services.AddSwaggerGen();
+
+services.AddCors(option =>
 {
-    o.AddDefaultPolicy(p =>
+    option.AddDefaultPolicy(policy =>
     {
-        p.AllowAnyHeader();
-        p.AllowAnyMethod();
-        p.AllowCredentials();
-        p.WithOrigins("http://localhost:3000", "https://localhost:3000");
+        policy.WithOrigins("http://localhost:3000", "https://localhost:3000");
+        policy.AllowCredentials();
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
     });
 });
 
-services.AddControllers();
-services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
+services.AddMvc();
 
 // Add DI (Services, Mapping, DbContext)
 services.AddScoped<UsersRepository>();
+services.AddScoped<PermissionsRepository>();
 
+services.AddScoped<JwtProvider>();
 services.AddScoped<PasswordHasher>();
 
 services.AddAutoMapper(typeof(ApplicationAutoMapper));
+
+services.AddAuthentication(config);
+
+services.AddControllers();
 
 services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(config.GetConnectionString(nameof(ApplicationDbContext)))
@@ -69,6 +76,8 @@ app.MapControllers();
 
 app.UseCors();
 
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.Run();

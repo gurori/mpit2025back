@@ -7,17 +7,21 @@ public partial class RoleConfiguration : IEntityTypeConfiguration<RoleEntity>
     {
         builder.HasKey(r => r.Id);
 
-        builder
-            .HasMany(r => r.Permissions)
-            .WithMany(p => p.Roles)
-            .UsingEntity<RolePermissionEntity>(
-                l => l.HasOne<PermissionEntity>().WithMany().HasForeignKey(e => e.PermissionId),
-                r => r.HasOne<RoleEntity>().WithMany().HasForeignKey(e => e.RoleId)
-            );
+            builder
+                .HasMany(r => r.Permissions)
+                .WithMany(p => p.Roles)
+                .UsingEntity<RolePermissionEntity>(
+                    l => l.HasOne<PermissionEntity>().WithMany().HasForeignKey(e => e.PermissionId),
+                    r => r.HasOne<RoleEntity>().WithMany().HasForeignKey(e => e.RoleId));
 
-        var roles = Enum.GetValues<Role>()
-            .Select(r => new RoleEntity { Id = (int)r, Name = r.ToString() });
+            var roles = Enum
+                .GetValues<Role>()
+                .Select(r => new RoleEntity
+                {
+                    Id = (int)r,
+                    Name = r.ToString(),
+                });
 
-        builder.HasData(roles);
+            builder.HasData(roles);
     }
 }

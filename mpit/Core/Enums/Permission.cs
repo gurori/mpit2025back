@@ -1,1 +1,4 @@
-public enum Permission { }
+public enum Permission
+{
+    A = 1,
+}
