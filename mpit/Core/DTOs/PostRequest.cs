@@ -1,0 +1,1 @@
+public record PostRequest(string Name, string Description);

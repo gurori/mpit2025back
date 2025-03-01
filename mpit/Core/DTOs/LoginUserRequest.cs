@@ -1,4 +1,3 @@
-public sealed record LoginUserRequest(
-    string Login,
-    string Password
-);
+namespace mpit.Core.DTOs;
+
+public sealed record LoginUserRequest(string Login, string Password);

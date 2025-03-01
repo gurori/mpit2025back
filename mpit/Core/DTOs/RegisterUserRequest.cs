@@ -1,4 +1,8 @@
+namespace mpit.Core.DTOs;
+
 public sealed record RegisterUserRequest(
     string Login,
-    string Password
+    string FirstName,
+    string Password,
+    string Role
 );
